@@ -44,7 +44,7 @@ class UserControllerTest {
         Assertions.assertEquals("Логин пользователя не может быть пустым или содержать пробелы.", loginValidationException.getMessage());
 
         controller.create(new User(0, "kazannik.m@mail.ru", "Логин", null,
-                LocalDate.of(2022, 07, 31)));
+                LocalDate.of(2022, 7, 31)));
         Assertions.assertEquals(controller.findAll().get(0).getName(), controller.findAll().get(0).getLogin());
 
         final ValidationException birthdateValidationException = assertThrows(ValidationException.class,
