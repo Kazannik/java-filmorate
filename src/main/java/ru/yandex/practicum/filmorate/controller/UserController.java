@@ -29,11 +29,6 @@ public class UserController {
 
     @PostMapping
     public User create(@Valid @RequestBody User user) throws ValidationException {
-        if (user == null) {
-            log.warn("Пустой запрос на добавление пользователя.");
-            throw new ValidationException(HttpStatus.INTERNAL_SERVER_ERROR, "Пустой запрос на добавление пользователя.");
-        }
-
         int id = getNextId();
         user = new User(id, user.getEmail(), user.getLogin(), user.getName(), user.getBirthday());
         if (user.getEmail().isBlank() || !user.getEmail().contains("@")) {
@@ -60,14 +55,9 @@ public class UserController {
 
     @PutMapping
     public User put(@Valid @RequestBody User user) throws ValidationException {
-        if (user == null) {
-            log.warn("Пустой запрос на обновление сведений о пользователе.");
-            throw new ValidationException(HttpStatus.INTERNAL_SERVER_ERROR, "Пустой запрос на обновление сведений о пользователе.");
-        }
-
         if (!users.containsKey(user.getId())) {
             log.warn("Попытка обновить сведения о незарегистрированном пользователе.", user);
-            throw new ValidationException("Пользователь с заданным идентификатором не зарегистрирован.");
+            throw new ValidationException(HttpStatus.INTERNAL_SERVER_ERROR, "Пользователь с заданным идентификатором не зарегистрирован.");
         } else {
             users.put(user.getId(), user);
             log.debug("Сведения о пользователе успешно обновлены.", user);

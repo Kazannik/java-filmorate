@@ -28,11 +28,6 @@ public class FilmController {
 
     @PostMapping
     public Film create(@Valid @RequestBody Film film) throws ValidationException {
-        if (film == null) {
-            log.warn("Пустой запрос на добавление фильма в коллекцию.");
-            throw new ValidationException(HttpStatus.INTERNAL_SERVER_ERROR, "Пустой запрос на добавление фильма в коллекцию.");
-        }
-
         int id = getNextId();
         film = new Film(id, film.getName(), film.getDescription(), film.getReleaseDate(), film.getDuration());
         if(film.getName().isBlank()) {
@@ -59,14 +54,9 @@ public class FilmController {
 
     @PutMapping
     public Film put(@Valid @RequestBody Film film) throws ValidationException {
-        if (film == null) {
-            log.warn("Пустой запрос на обновление сведений о фильме.");
-            throw new ValidationException(HttpStatus.INTERNAL_SERVER_ERROR, "Пустой запрос на обновление сведений о фильме.");
-        }
-
         if (!films.containsKey(film.getId())) {
             log.warn("Попытка обновить сведения об отсутствующем фильме.", film);
-            throw new ValidationException("Заданный фильм отсутствует в коллекции.");
+            throw new ValidationException(HttpStatus.INTERNAL_SERVER_ERROR, "Заданный фильм отсутствует в коллекции.");
         } else {
             films.put(film.getId(), film);
             log.debug("Сведения о фильме успешно обновлены.", film);
