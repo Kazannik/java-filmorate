@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
@@ -27,6 +28,11 @@ public class FilmController {
 
     @PostMapping
     public Film create(@Valid @RequestBody Film film) throws ValidationException {
+        if (film == null) {
+            log.warn("Пустой запрос на добавление фильма в коллекцию.");
+            throw new ValidationException(HttpStatus.INTERNAL_SERVER_ERROR, "Пустой запрос на добавление фильма в коллекцию.");
+        }
+
         int id = getNextId();
         film = new Film(id, film.getName(), film.getDescription(), film.getReleaseDate(), film.getDuration());
         if(film.getName().isBlank()) {
@@ -53,6 +59,11 @@ public class FilmController {
 
     @PutMapping
     public Film put(@Valid @RequestBody Film film) throws ValidationException {
+        if (film == null) {
+            log.warn("Пустой запрос на обновление сведений о фильме.");
+            throw new ValidationException(HttpStatus.INTERNAL_SERVER_ERROR, "Пустой запрос на обновление сведений о фильме.");
+        }
+
         if (!films.containsKey(film.getId())) {
             log.warn("Попытка обновить сведения об отсутствующем фильме.", film);
             throw new ValidationException("Заданный фильм отсутствует в коллекции.");

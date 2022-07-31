@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
@@ -28,6 +29,11 @@ public class UserController {
 
     @PostMapping
     public User create(@Valid @RequestBody User user) throws ValidationException {
+        if (user == null) {
+            log.warn("Пустой запрос на добавление пользователя.");
+            throw new ValidationException(HttpStatus.INTERNAL_SERVER_ERROR, "Пустой запрос на добавление пользователя.");
+        }
+
         int id = getNextId();
         user = new User(id, user.getEmail(), user.getLogin(), user.getName(), user.getBirthday());
         if (user.getEmail().isBlank() || !user.getEmail().contains("@")) {
@@ -54,6 +60,11 @@ public class UserController {
 
     @PutMapping
     public User put(@Valid @RequestBody User user) throws ValidationException {
+        if (user == null) {
+            log.warn("Пустой запрос на обновление сведений о пользователе.");
+            throw new ValidationException(HttpStatus.INTERNAL_SERVER_ERROR, "Пустой запрос на обновление сведений о пользователе.");
+        }
+
         if (!users.containsKey(user.getId())) {
             log.warn("Попытка обновить сведения о незарегистрированном пользователе.", user);
             throw new ValidationException("Пользователь с заданным идентификатором не зарегистрирован.");

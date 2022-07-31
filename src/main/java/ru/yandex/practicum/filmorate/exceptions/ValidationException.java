@@ -5,7 +5,11 @@ import org.springframework.web.server.ResponseStatusException;
 
 public class ValidationException extends ResponseStatusException {
     public ValidationException(final String message) {
-        super(HttpStatus.BAD_REQUEST);
+        this(HttpStatus.BAD_REQUEST, message);
+    }
+
+    public ValidationException(final HttpStatus status, final String message) {
+        super(status);
         this.message=message;
     }
 
