@@ -57,10 +57,6 @@ class UserControllerTest {
         } catch (ValidationException ex) {
             assertNull(ex);
         }
-
-        final ValidationException putNullValidationException = assertThrows(ValidationException.class,
-                () -> controller.create(null));
-        Assertions.assertNotNull(putNullValidationException);
     }
 
     @Test
@@ -70,9 +66,5 @@ class UserControllerTest {
                         LocalDate.of(2022, 7, 31))));
         Assertions.assertEquals("Пользователь с заданным идентификатором не зарегистрирован.",
                 putNewUserValidationException.getMessage());
-
-        final ValidationException putNullValidationException = assertThrows(ValidationException.class,
-                () -> controller.put(null));
-        Assertions.assertNotNull(putNullValidationException);
     }
 }

@@ -64,10 +64,6 @@ class FilmControllerTest {
         } catch (ValidationException ex) {
             assertNull(ex);
         }
-
-        final ValidationException putNullValidationException = assertThrows(ValidationException.class,
-                () -> controller.create(null));
-        Assertions.assertNotNull(putNullValidationException);
     }
 
     @Test
@@ -77,9 +73,5 @@ class FilmControllerTest {
                         LocalDate.of(2022,7,31),45)));
         Assertions.assertEquals("Заданный фильм отсутствует в коллекции.",
                 putNewFilmValidationException.getMessage());
-
-        final ValidationException putNullValidationException = assertThrows(ValidationException.class,
-                () -> controller.put(null));
-        Assertions.assertNotNull(putNullValidationException);
     }
 }
