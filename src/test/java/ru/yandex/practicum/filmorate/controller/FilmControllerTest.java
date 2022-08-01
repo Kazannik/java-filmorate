@@ -1,8 +1,8 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
@@ -14,12 +14,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 class FilmControllerTest {
-    static FilmController controller;
-
-    @BeforeAll
-    public static void beforeAll(){
-        controller = new FilmController();
-    }
+    @Autowired
+    FilmController controller;
 
     @Test
     void create() {

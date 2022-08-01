@@ -1,7 +1,6 @@
 package ru.yandex.practicum.filmorate.controller;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
@@ -15,10 +14,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Slf4j
 @RestController
 @RequestMapping("/films")
 public class FilmController {
-    private static final Logger log = LoggerFactory.getLogger(FilmController.class);
     private final Map<Integer, Film> films = new HashMap<>();
 
     @GetMapping
@@ -30,19 +29,19 @@ public class FilmController {
     public Film create(@Valid @RequestBody Film film) throws ValidationException {
         int id = getNextId();
         film = new Film(id, film.getName(), film.getDescription(), film.getReleaseDate(), film.getDuration());
-        if(film.getName().isBlank()) {
+        if (film.getName().isBlank()) {
             log.warn("Некорректное название фильма.", film);
             throw new ValidationException("Название не может быть пустым.");
         }
-        if(film.getDescription().length() > 200) {
+        if (film.getDescription().length() > 200) {
             log.warn("Превышена максимальная длина описания фильма.", film);
             throw new ValidationException("Максимальная длина описания фильма не может превышать 200 символов.");
         }
-        if(film.getReleaseDate().isBefore(LocalDate.of(1895,12,28))) {
+        if (film.getReleaseDate().isBefore(LocalDate.of(1895, 12, 28))) {
             log.warn("Некорректная дата релиза фильма.", film);
             throw new ValidationException("Дата релиза фильма не раньше 28 декабря 1895 года.");
         }
-        if(film.getDuration() <= 0) {
+        if (film.getDuration() <= 0) {
             log.warn("Некорректная продолжительность фильма.", film);
             throw new ValidationException("Продолжительность фильма должна быть положительной.");
         }
