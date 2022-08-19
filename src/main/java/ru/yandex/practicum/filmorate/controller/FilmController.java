@@ -26,7 +26,6 @@ public class FilmController {
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Film create(@Valid @RequestBody Film film) throws ValidationException {
         int id = getNextId();
         film = new Film(id, film.getName(), film.getDescription(), film.getReleaseDate(), film.getDuration());

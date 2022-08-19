@@ -27,7 +27,6 @@ public class UserController {
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public User create(@Valid @RequestBody User user) throws ValidationException {
         int id = getNextId();
         user = new User(id, user.getEmail(), user.getLogin(), user.getName(), user.getBirthday());
