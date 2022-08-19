@@ -58,7 +58,7 @@ class UserControllerTest {
     @Test
     void put() {
         final ValidationException putNewUserValidationException = assertThrows(ValidationException.class,
-                () -> controller.put(new User(3, "kazannik.m@mail.ru", "Логин", "Имя пользователя",
+                () -> controller.put(new User(99, "kazannik.m@mail.ru", "Логин", "Имя пользователя",
                         LocalDate.of(2022, 7, 31))));
         Assertions.assertEquals("Пользователь с заданным идентификатором не зарегистрирован.",
                 putNewUserValidationException.getMessage());
