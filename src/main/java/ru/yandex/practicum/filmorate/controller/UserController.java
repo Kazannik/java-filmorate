@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 public class UserController {
 
     private final Map<Integer, User> users = new HashMap<>();
+    private static int key = 1;
 
     @GetMapping
     public List<User> findAll() {
@@ -66,18 +67,6 @@ public class UserController {
     }
 
     private int getNextId() {
-        List<Integer> list = getAllId();
-        int key = 1;
-        while (list.contains(key)) {
-            key++;
-        }
-        return key;
-    }
-
-    private List<Integer> getAllId() {
-        return users.values().stream()
-                .map(User::getId)
-                .sorted()
-                .collect(Collectors.toList());
+        return key++;
     }
 }
