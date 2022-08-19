@@ -26,6 +26,7 @@ public class FilmController {
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Film create(@Valid @RequestBody Film film) throws ValidationException {
         int id = getNextId();
         film = new Film(id, film.getName(), film.getDescription(), film.getReleaseDate(), film.getDuration());
@@ -52,10 +53,11 @@ public class FilmController {
     }
 
     @PutMapping
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public Film put(@Valid @RequestBody Film film) throws ValidationException {
         if (!films.containsKey(film.getId())) {
             log.warn("Попытка обновить сведения об отсутствующем фильме.", film);
-            throw new ValidationException(HttpStatus.INTERNAL_SERVER_ERROR, "Заданный фильм отсутствует в коллекции.");
+            throw new ValidationException("Заданный фильм отсутствует в коллекции.");
         } else {
             films.put(film.getId(), film);
             log.debug("Сведения о фильме успешно обновлены.", film);

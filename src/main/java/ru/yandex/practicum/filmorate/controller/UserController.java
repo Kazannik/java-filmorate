@@ -27,6 +27,7 @@ public class UserController {
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public User create(@Valid @RequestBody User user) throws ValidationException {
         int id = getNextId();
         user = new User(id, user.getEmail(), user.getLogin(), user.getName(), user.getBirthday());
@@ -53,10 +54,11 @@ public class UserController {
     }
 
     @PutMapping
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public User put(@Valid @RequestBody User user) throws ValidationException {
         if (!users.containsKey(user.getId())) {
             log.warn("Попытка обновить сведения о незарегистрированном пользователе.", user);
-            throw new ValidationException(HttpStatus.INTERNAL_SERVER_ERROR, "Пользователь с заданным идентификатором не зарегистрирован.");
+            throw new ValidationException("Пользователь с заданным идентификатором не зарегистрирован.");
         } else {
             users.put(user.getId(), user);
             log.debug("Сведения о пользователе успешно обновлены.", user);
