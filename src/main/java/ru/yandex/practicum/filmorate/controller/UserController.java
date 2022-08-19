@@ -54,7 +54,6 @@ public class UserController {
     }
 
     @PutMapping
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public User put(@Valid @RequestBody @NonNull User user) throws ValidationException {
         if (!users.containsKey(user.getId())) {
             log.warn("Попытка обновить сведения о незарегистрированном пользователе.", user);

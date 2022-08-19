@@ -53,7 +53,6 @@ public class FilmController {
     }
 
     @PutMapping
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public Film put(@Valid @RequestBody @NonNull Film film) throws ValidationException {
         if (!films.containsKey(film.getId())) {
             log.warn("Попытка обновить сведения об отсутствующем фильме.", film);
