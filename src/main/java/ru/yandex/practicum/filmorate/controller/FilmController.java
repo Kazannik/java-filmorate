@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -53,7 +54,7 @@ public class FilmController {
 
     @PutMapping
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public Film put(@Valid @RequestBody Film film) throws ValidationException {
+    public Film put(@Valid @RequestBody @NonNull Film film) throws ValidationException {
         if (!films.containsKey(film.getId())) {
             log.warn("Попытка обновить сведения об отсутствующем фильме.", film);
             throw new ValidationException("Заданный фильм отсутствует в коллекции.");

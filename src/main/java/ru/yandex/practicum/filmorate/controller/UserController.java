@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -54,7 +55,7 @@ public class UserController {
 
     @PutMapping
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public User put(@Valid @RequestBody User user) throws ValidationException {
+    public User put(@Valid @RequestBody @NonNull User user) throws ValidationException {
         if (!users.containsKey(user.getId())) {
             log.warn("Попытка обновить сведения о незарегистрированном пользователе.", user);
             throw new ValidationException("Пользователь с заданным идентификатором не зарегистрирован.");
