@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.service;
 
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 import ru.yandex.practicum.filmorate.exceptions.NotFoundException;
@@ -22,7 +23,7 @@ import java.util.stream.Collectors;
 public class FilmService {
     private final FilmStorage storage = new InMemoryFilmStorage();
     private final UserService userService;
-
+    @Autowired
     public FilmService(UserService userService) {
         this.userService = userService;
     }
