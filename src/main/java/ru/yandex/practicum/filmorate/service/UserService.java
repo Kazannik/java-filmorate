@@ -11,7 +11,6 @@ import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Positive;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -41,7 +40,7 @@ public class UserService {
         return this.storage.createUser(user);
     }
 
-    public User getUser(@Valid @Positive long id) {
+    public User getUser(long id) {
         if (!this.storage.containsUser(id)) {
             log.warn("Попытка доступа к отсутствующему пользователю ({}).", id);
             throw new NotFoundException(String.format("Пользователь (%s) отсутствует в коллекции.", id));
@@ -64,7 +63,7 @@ public class UserService {
         return this.storage.findAll();
     }
 
-    public void addFriend(@Valid @Positive long userId, @Valid @Positive long friendId) {
+    public void addFriend(long userId, long friendId) {
         User user = getUser(userId);
         User friend = getUser(friendId);
         user.getFriends().add(friend.getId());
@@ -72,7 +71,7 @@ public class UserService {
         log.debug("Пользователю ({}) добавлен друг ({})", userId, friendId);
     }
 
-    public void removeFriend(@Valid @Positive long userId, @Valid @Positive long friendId) {
+    public void removeFriend(long userId, long friendId) {
         User user = getUser(userId);
         User friend = getUser(friendId);
         if (user.getFriends().remove(friend.getId()) && friend.getFriends().remove(user.getId())) {
@@ -83,14 +82,14 @@ public class UserService {
         }
     }
 
-    public List<User> getFriends(@Valid @Positive long userId) {
+    public List<User> getFriends(long userId) {
         User user = getUser(userId);
         return user.getFriends().stream()
                 .map(storage::getUser)
                 .collect(Collectors.toList());
     }
 
-    public List<User> getCommonFriends(@Valid @Positive long userId, @Valid @Positive long otherId) {
+    public List<User> getCommonFriends(long userId, long otherId) {
         User user = getUser(userId);
         return user.getFriends().stream()
                 .map(storage::getUser)

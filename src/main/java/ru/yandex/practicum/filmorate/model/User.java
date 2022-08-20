@@ -13,7 +13,6 @@ import java.util.Set;
 @EqualsAndHashCode
 @RequiredArgsConstructor
 public class User {
-    @Positive
     private final long id;
     @NonNull
     @NotBlank

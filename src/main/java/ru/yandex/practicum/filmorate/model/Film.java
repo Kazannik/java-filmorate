@@ -15,7 +15,6 @@ import java.util.Set;
 @EqualsAndHashCode
 @RequiredArgsConstructor
 public class Film {
-    @Positive
     private final long id;
     @NotBlank
     @NonNull

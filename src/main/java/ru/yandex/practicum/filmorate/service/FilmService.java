@@ -13,7 +13,6 @@ import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.film.InMemoryFilmStorage;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Positive;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -48,7 +47,7 @@ public class FilmService {
         return this.storage.createFilm(film);
     }
 
-    public Film getFilm(@Valid @Positive long id) {
+    public Film getFilm(long id) {
         if (!this.storage.containsFilm(id)) {
             log.warn("Попытка доступа к отсутствующему фильму ({}).", id);
             throw new NotFoundException(String.format("Фильм (%s) отсутствует в коллекции.", id));
@@ -71,14 +70,14 @@ public class FilmService {
         return this.storage.findAll();
     }
 
-    public void addLike(@Valid @Positive long filmId, @Valid @Positive long userId) {
+    public void addLike(long filmId, long userId) {
         Film film = getFilm(filmId);
         User user = userService.getUser(userId);
         film.getLikes().add(user.getId());
         log.debug("Пользователь ({}) поставил лайк фильму ({})", userId, filmId);
     }
 
-    public void removeLike(@Valid @Positive long filmId, @Valid @Positive long userId) {
+    public void removeLike(long filmId, long userId) {
         Film film = getFilm(filmId);
         User user = userService.getUser(userId);
         if (film.getLikes().remove(user.getId())) {
