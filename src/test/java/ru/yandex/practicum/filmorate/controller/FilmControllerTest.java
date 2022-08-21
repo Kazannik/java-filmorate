@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import ru.yandex.practicum.filmorate.exceptions.NotFoundException;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 
@@ -64,10 +65,10 @@ class FilmControllerTest {
 
     @Test
     void put() {
-        final ValidationException putNewFilmValidationException = assertThrows(ValidationException.class,
+        final NotFoundException putNewFilmValidationException = assertThrows(NotFoundException.class,
                 () -> controller.put(new Film(3,"Название фильма", "Описание фильма",
                         LocalDate.of(2022,7,31),45)));
-        Assertions.assertEquals("Заданный фильм отсутствует в коллекции.",
+        Assertions.assertEquals("Фильм (3) отсутствует в коллекции.",
                 putNewFilmValidationException.getMessage());
     }
 }

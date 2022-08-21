@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import ru.yandex.practicum.filmorate.exceptions.NotFoundException;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
@@ -57,10 +58,10 @@ class UserControllerTest {
 
     @Test
     void put() {
-        final ValidationException putNewUserValidationException = assertThrows(ValidationException.class,
+        final NotFoundException putNewUserValidationException = assertThrows(NotFoundException.class,
                 () -> controller.put(new User(99, "kazannik.m@mail.ru", "Логин", "Имя пользователя",
                         LocalDate.of(2022, 7, 31))));
-        Assertions.assertEquals("Пользователь с заданным идентификатором не зарегистрирован.",
+        Assertions.assertEquals("Пользователь (99) отсутствует в коллекции.",
                 putNewUserValidationException.getMessage());
     }
 }
