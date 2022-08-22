@@ -13,9 +13,9 @@ import java.util.Map;
 @Component
 public class InMemoryFilmStorage implements FilmStorage {
     private final Map<Long, Film> films = new HashMap<>();
-    private static long key = 1;
+    private long key = 1;
 
-    private static long nextIdGenerator() {
+    private long nextIdGenerator() {
         return key++;
     }
 

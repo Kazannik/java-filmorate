@@ -13,9 +13,9 @@ import java.util.Map;
 @Component
 public class InMemoryUserStorage implements UserStorage {
     private final Map<Long, User> users = new HashMap<>();
-    private static long key = 1;
+    private long key = 1;
 
-    private static long nextIdGenerator() {
+    private long nextIdGenerator() {
         return key++;
     }
 
