@@ -1,7 +1,7 @@
 # java-filmorate
 Template repository for Filmorate project.
 
-![Database diagram](../main/filmorate-database.png)
+![Database diagram](../add-diagram/filmorate-database.png)
 
  База данных состоит из 6 таблиц:
  
