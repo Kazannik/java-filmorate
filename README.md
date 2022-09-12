@@ -28,7 +28,7 @@ Template repository for Filmorate project.
 ### 3. Выборка всех фильмов:  
     SELECT *
     FROM films
-    ORDER BY id
+    ORDER BY id;
 
 ### 4. Топ 10 лучших фильмов:  
     SELECT F.*
