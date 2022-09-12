@@ -3,49 +3,59 @@ Template repository for Filmorate project.
 
 ![Database diagram](../add-diagram/filmorate-database.png)
 
- База данных состоит из 6 таблиц:
+ База данных состоит из 7 таблиц:
  
 - films – содержит сведения о фильмах;
-- film_category – содержит справочник жанров (категорий) фильмов;
-- film_mpa – содержит справочник рейтинга Ассоциации кинокомпаний;
+- films_genres - содержит связи между фильмами и жанрами;
+- genres – содержит справочник жанров фильмов;
+- mpa – содержит справочник рейтинга Ассоциации кинокомпаний;
 - favorite_films – содержит сведения о лайках фильмам;
 - users – содержит сведения о пользователях;
 - users_friends – содержит сведения о дружбе пользователей.
 
 ## Образцы запросов:
+	
+### 1. Проверка наличия фильма по индексу 1:  
+    SELECT count(*) > 0 
+    FROM films
+    WHERE id=1;
 
-### 1. Выборка всех пользователей:
+### 2. Получение фильма по индексу 1:  
     SELECT *
-    FROM users AS u
-    ORDER BY u.id;
+    FROM films
+    WHERE id=1;
 
-### 2. Выборка всех фильмов:  
+### 3. Выборка всех фильмов:  
     SELECT *
-    FROM films AS f
-    ORDER BY f.id;  
-  
-### 3. Топ 10 лучших фильмов:  
-    SELECT f.id AS id,
-           COUNT(ff.film_id) AS top
-    FROM films AS f
-             LEFT OUTER JOIN favorite_films ff on f.id = ff.film_id
-    GROUP BY id
-    ORDER BY top DESC, id
+    FROM films
+    ORDER BY id
+
+### 4. Топ 10 лучших фильмов:  
+    SELECT F.*
+    FROM films AS F
+    LEFT OUTER JOIN favorite_films AS FF ON F.id = FF.film_id
+    GROUP BY F.id
+    ORDER BY Count(FF.film_id) DESC
     LIMIT 10;
 
-### 4. Выборка общих друзей у пользователей с индексами 1 и 2 с подтвержденным статусом дружбы:
-    SELECT t.id_2 AS friend_id
-    FROM (SELECT uf.user_id AS id_1,
-                 uf.friend_id AS id_2,
-                 uf.status AS status
-          FROM users_friends AS uf
-          UNION
-          SELECT uf.friend_id AS id_1,
-                 uf.user_id AS id_2,
-                 uf.status AS status
-          FROM users_friends AS uf
-          ORDER BY id_1, id_2) AS t
-    WHERE t.id_1 IN (1, 2)
-      AND t.status = true
-    GROUP BY friend_id
-    HAVING count(t.id_2) > 1;
+### 5. Выборка друзей у пользователя с индексом 1:  
+    SELECT U.*
+    FROM users_friends AS UF
+    LEFT OUTER JOIN users AS U ON UF.friend_id=U.id
+    WHERE UF.user_id=1;
+
+### 6. Выборка общих друзей у пользователей с индексами 1 и 2 с подтвержденным статусом дружбы:
+    SELECT *
+    FROM users
+    WHERE id IN
+      (SELECT t.id_2 AS friend_id
+         FROM
+          (SELECT UF.user_id AS id_1, UF.friend_id AS id_2
+           FROM users_friends AS UF
+           UNION
+           SELECT UF.friend_id AS id_1, UF.user_id AS id_2
+           FROM users_friends AS UF
+           ORDER BY id_1, id_2) AS t
+       WHERE t.id_1 IN (1, 2)
+       GROUP BY friend_id
+       HAVING count(t.id_2) > 1);
