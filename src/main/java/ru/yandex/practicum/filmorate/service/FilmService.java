@@ -1,9 +1,8 @@
 package ru.yandex.practicum.filmorate.service;
 
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 import ru.yandex.practicum.filmorate.exceptions.NotFoundException;
@@ -20,21 +19,15 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Slf4j
+
 @Service
+@RequiredArgsConstructor
 public class FilmService {
+
     private final FilmStorage filmStorage;
     private final GenreDao genresDao;
     private final MpaDao mpaDao;
     private final UserService userService;
-
-    @Autowired
-    public FilmService(@Qualifier("FilmDbStorage") FilmStorage storage, UserService userService,
-                       GenreDao genres, MpaDao mpa) {
-        this.filmStorage = storage;
-        this.userService = userService;
-        this.genresDao = genres;
-        this.mpaDao = mpa;
-    }
 
     public Film createFilm(@Valid @NonNull @RequestBody Film film) throws ValidationException {
         if (film.getName().isBlank()) {

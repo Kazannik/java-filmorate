@@ -1,9 +1,8 @@
 package ru.yandex.practicum.filmorate.service;
 
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 import ru.yandex.practicum.filmorate.exceptions.NotFoundException;
@@ -17,13 +16,9 @@ import java.util.List;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class UserService {
     private final UserStorage userStorage;
-
-    @Autowired
-    public UserService(@Qualifier("UserDbStorage") UserStorage storage) {
-        this.userStorage = storage;
-    }
 
     public User create(@Valid @RequestBody User user) throws ValidationException {
         if (user.getEmail().isBlank() || !user.getEmail().contains("@")) {

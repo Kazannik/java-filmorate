@@ -1,9 +1,11 @@
 package ru.yandex.practicum.filmorate.storage.user.dao;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
@@ -13,13 +15,11 @@ import java.util.List;
 import java.util.Optional;
 
 @Slf4j
-@Component("UserDbStorage")
+@Repository
+@RequiredArgsConstructor
+@Primary
 public class UserDbStorage implements UserStorage {
     private final JdbcTemplate jdbcTemplate;
-
-    public UserDbStorage(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
 
     @Override
     public User createUser(User user) {
@@ -33,8 +33,8 @@ public class UserDbStorage implements UserStorage {
 
     @Override
     public boolean containsUser(long id) {
-        SqlRowSet userRows = jdbcTemplate.queryForRowSet("SELECT * FROM users WHERE id=?", id);
-        return userRows.next();
+        return jdbcTemplate.queryForObject(
+                "SELECT count(*) > 0 FROM users WHERE id=?", Boolean.class, id);
     }
 
     @Override

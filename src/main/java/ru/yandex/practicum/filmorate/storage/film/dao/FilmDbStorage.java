@@ -1,9 +1,11 @@
 package ru.yandex.practicum.filmorate.storage.film.dao;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
@@ -12,21 +14,19 @@ import ru.yandex.practicum.filmorate.storage.mpa.dao.MpaDao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
-@Component("FilmDbStorage")
+@Repository()
+@RequiredArgsConstructor
+@Primary
 public class FilmDbStorage implements FilmStorage {
     private final JdbcTemplate jdbcTemplate;
     private final GenreDao genreDao;
     private final MpaDao mpaDao;
-
-    public FilmDbStorage(JdbcTemplate jdbcTemplate, GenreDao genreDao, MpaDao mpaDao) {
-        this.jdbcTemplate = jdbcTemplate;
-        this.genreDao = genreDao;
-        this.mpaDao = mpaDao;
-    }
 
     @Override
     public Film createFilm(Film film) {
