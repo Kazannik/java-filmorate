@@ -4,11 +4,15 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
+import java.sql.Date;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -23,10 +27,18 @@ public class UserDbStorage implements UserStorage {
 
     @Override
     public User createUser(User user) {
-        jdbcTemplate.update("INSERT INTO users (email, login, name, birthday) VALUES(?,?,?,?)",
-                user.getEmail(), user.getLogin(), user.getName(), user.getBirthday());
-        long max = jdbcTemplate.queryForObject("SELECT max(id) FROM users", Long.class);
-        User createdUser = getUser(max);
+        String sql = "INSERT INTO users (email, login, name, birthday) VALUES(?,?,?,?)";
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(con -> {
+            PreparedStatement stmt = con.prepareStatement(sql, new String[]{"id"});
+            stmt.setString(1, user.getEmail());
+            stmt.setString(2, user.getLogin());
+            stmt.setString(3, user.getName());
+            stmt.setDate(4, Date.valueOf(user.getBirthday()));
+            return stmt;
+        }, keyHolder);
+        long userId = keyHolder.getKey().longValue();
+        User createdUser = getUser(userId);
         log.debug("Пользователь {} добавлен в коллекцию.", createdUser);
         return createdUser;
     }

@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.model.Film;
@@ -12,6 +14,8 @@ import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.genre.dao.GenreDao;
 import ru.yandex.practicum.filmorate.storage.mpa.dao.MpaDao;
 
+import java.sql.Date;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -30,11 +34,19 @@ public class FilmDbStorage implements FilmStorage {
 
     @Override
     public Film createFilm(Film film) {
-        jdbcTemplate.update(
-                "INSERT INTO films (name, description, releaseDate, duration, mpa_id, rate) VALUES(?,?,?,?,?,?)",
-                film.getName(), film.getDescription(), film.getReleaseDate(), film.getDuration(), film.getMpa().getId(),
-                film.getRate());
-        long filmId = jdbcTemplate.queryForObject("SELECT max(id) FROM films", Long.class);
+        String sql = "INSERT INTO films (name, description, releaseDate, duration, mpa_id, rate) VALUES(?,?,?,?,?,?)";
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(con -> {
+            PreparedStatement stmt = con.prepareStatement(sql, new String[]{"id"});
+            stmt.setString(1, film.getName());
+            stmt.setString(2, film.getDescription());
+            stmt.setDate(3, Date.valueOf(film.getReleaseDate()));
+            stmt.setInt(4,film.getDuration());
+            stmt.setInt(5,film.getMpa().getId());
+            stmt.setInt(6,film.getRate());
+            return stmt;
+        }, keyHolder);
+        long filmId = keyHolder.getKey().longValue();
         filmGenresUpdate(filmId, film.getGenres());
         Film createdFilm = getFilm(filmId);
         log.debug("Фильм {} добавлен в коллекцию.", createdFilm);
