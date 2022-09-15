@@ -21,7 +21,7 @@ class UserControllerTest {
     @Test
     void createUserWithNullEmailTest() {
         final NullPointerException nullEmailException = assertThrows(NullPointerException.class,
-                () -> controller.create(new User(0, null, "Логин", "Имя пользователя",
+                () -> controller.create(new User(0L, null, "Логин", "Имя пользователя",
                         LocalDate.of(2022, 7, 31))));
         Assertions.assertEquals("email is marked non-null but is null", nullEmailException.getMessage());
     }
@@ -29,7 +29,7 @@ class UserControllerTest {
     @Test
     void createUserWithNullLoginTest() {
         final NullPointerException nullLoginException = assertThrows(NullPointerException.class,
-                () -> controller.create(new User(0, "kazannik.m@mail.ru", null, "Имя пользователя",
+                () -> controller.create(new User(0L, "kazannik.m@mail.ru", null, "Имя пользователя",
                         LocalDate.of(2022, 7, 31))));
         Assertions.assertEquals("login is marked non-null but is null", nullLoginException.getMessage());
     }
@@ -37,7 +37,7 @@ class UserControllerTest {
     @Test
     void createUserWithBadEmailTest() {
         final ValidationException emailValidationException = assertThrows(ValidationException.class,
-                () -> controller.create(new User(0, "kazannik.mAmail.ru", "Логин", "Имя пользователя",
+                () -> controller.create(new User(0L, "kazannik.mAmail.ru", "Логин", "Имя пользователя",
                         LocalDate.of(2022, 7, 31))));
         Assertions.assertEquals("Адрес электронной почты некорректен.", emailValidationException.getMessage());
     }
@@ -45,14 +45,14 @@ class UserControllerTest {
     @Test
     void createUserWithBadLoginTest() {
         final ValidationException loginValidationException = assertThrows(ValidationException.class,
-                () -> controller.create(new User(0, "kazannik.m@mail.ru", "Логин пользователя", "Имя пользователя",
+                () -> controller.create(new User(0L, "kazannik.m@mail.ru", "Логин пользователя", "Имя пользователя",
                         LocalDate.of(2022, 7, 31))));
         Assertions.assertEquals("Логин пользователя не может быть пустым или содержать пробелы.", loginValidationException.getMessage());
     }
 
     @Test
     void createUserWithNullNameTest() {
-        controller.create(new User(0, "kazannik.m@mail.ru", "Логин", null,
+        controller.create(new User(0L, "kazannik.m@mail.ru", "Логин", null,
                 LocalDate.of(2022, 7, 31)));
         Assertions.assertEquals(controller.findAll().get(0).getName(), controller.findAll().get(0).getLogin());
     }
@@ -60,7 +60,7 @@ class UserControllerTest {
     @Test
     void createUserWithBadBirthdayTest() {
         final ValidationException birthdateValidationException = assertThrows(ValidationException.class,
-                () -> controller.create(new User(0, "kazannik.m@mail.ru", "Логин", "Имя пользователя",
+                () -> controller.create(new User(0L, "kazannik.m@mail.ru", "Логин", "Имя пользователя",
                         LocalDate.now().plusDays(1))));
         Assertions.assertEquals("Дата рождения пользователя некорректна.", birthdateValidationException.getMessage());
     }
@@ -68,7 +68,7 @@ class UserControllerTest {
     @Test
     void createUserTest() {
         try {
-            controller.create(new User(1, "kazannik.m@mail.ru", "Логин", "Имя пользователя", LocalDate.now()));
+            controller.create(new User(1L, "kazannik.m@mail.ru", "Логин", "Имя пользователя", LocalDate.now()));
         } catch (ValidationException ex) {
             assertNull(ex);
         }
@@ -77,7 +77,7 @@ class UserControllerTest {
     @Test
     void putUserNotFoundTest() {
         final NotFoundException putNewUserValidationException = assertThrows(NotFoundException.class,
-                () -> controller.put(new User(99, "kazannik.m@mail.ru", "Логин", "Имя пользователя",
+                () -> controller.put(new User(99L, "kazannik.m@mail.ru", "Логин", "Имя пользователя",
                         LocalDate.of(2022, 7, 31))));
         Assertions.assertEquals("Пользователь (99) отсутствует в коллекции.",
                 putNewUserValidationException.getMessage());
